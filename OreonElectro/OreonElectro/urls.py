@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.views.decorators.csrf import csrf_exempt
 from . import views
 
 urlpatterns = [
@@ -8,8 +9,8 @@ urlpatterns = [
     path('products/<int:pk>/', include('products.urls')),
     path('customer/', include('users.urls')),
     path('orders/', include('orders.urls')),
-    path('', views.home, name="home"),
-    path('register/', views.register, name='register'),
+    path('home/', views.home, name="home"),
+    path('register/', csrf_exempt(views.register), name='register'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
     path('password-reset/', views.password_reset, name='password_reset'),
