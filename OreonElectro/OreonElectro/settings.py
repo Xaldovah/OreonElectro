@@ -55,8 +55,12 @@ INSTALLED_APPS = [
     'products',
     'users',
     'reviews',
+    'registration',
     'rest_framework',
     'corsheaders',
+    'crispy_forms',
+    'bootstrap4',
+    'crispy_bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -151,3 +155,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
+CRISPY_TEMPLATE_PACK="bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS="bootstrap4"
