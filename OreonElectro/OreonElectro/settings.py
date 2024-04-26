@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'products',
     'users',
     'reviews',
-    'registration',
+    'cart',
     'rest_framework',
     'corsheaders',
     'crispy_forms',
@@ -157,3 +157,5 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
 CRISPY_TEMPLATE_PACK="bootstrap4"
 CRISPY_ALLOWED_TEMPLATE_PACKS="bootstrap4"
+LOGIN_REDIRECT_URL = "/customer"
+LOGOUT_REDIRECT_URL = "/home"

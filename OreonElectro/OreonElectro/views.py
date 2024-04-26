@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
+from users.models import Customer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+from users.serializers import CustomerSerializer
 
 def home(response):
         return render(response, "OreonElectro/home.html", {})
@@ -26,7 +31,8 @@ def register(response):
     return render(response, "OreonElectro/register.html", {"form": form})
 
 
-def login(request):
+@api_view(['POST'])
+def login(response):
     """
     API endpoint to authenticate and login a user
 
@@ -36,35 +42,37 @@ def login(request):
     Returns:                                
         Response: JSON response indicating the success or failure of user login.
     """
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.data)
+    if response.method == 'POST':
+        form = AuthenticationForm(data=response.data)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
 
             if user is not None:
-                auth_login(request, user)
-                return Response({'message': 'Login successful!'}, status=200)
+                auth_login(response, user)
+                return redirect('/customer')
         return Response({'error': 'Invalid credentials'}, status=400)
 
 
-def logout(request): 
+@api_view(['POST'])
+def logout(response): 
     """
     API endpoint to log out a user
 
     Args:
-        request: HTTP request object.
+        response: HTTP response object.
 
     Returns:
         Response: JSON response indicating the success or failure of user logout.
     """
-    if request.user.is_authenticated:
+    if response.user.is_authenticated:
         auth_logout(request)
-        return Response({'message': 'Logout successful!'}, status=200)
+        return render(response, "OreonElectro/home.html")
     return Response({'error': 'User is not logged in'}, status=400)
 
 
+@api_view(['POST'])
 def password_reset(request):
     """
     API endpoint to initiate a password reset for a user.
@@ -84,6 +92,7 @@ def password_reset(request):
     return Response(form.errors, status=400)
 
 
+@api_view(['GET', 'PUT'])
 def customer_detail(request):
     """
     API endpoint to retrieve or update user profile details.
@@ -97,7 +106,7 @@ def customer_detail(request):
     user = request.user
     try:
         profile = Customer.objects.get(user=user)
-    except Profile.DoesNotExist:
+    except Customer.DoesNotExist:
         return Response({'error': 'Profile not found!'}, status=404)
 
     if request.method == 'GET':
@@ -108,4 +117,4 @@ def customer_detail(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=404)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
