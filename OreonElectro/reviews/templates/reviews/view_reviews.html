@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>View Reviews</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 20px;
+		}
+		h1 {
+			margin-bottom: 20px;
+		}
+		ul {
+			list-style-type: none;
+			padding: 0;
+		}
+		li {
+			margin-bottom: 20px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+		.rating {
+			color: #ffc107;
+			margin-right: 5px;
+		}
+	</style>
+</head>
+<body>
+	<h1>View Reviews</h1>
+	<ul>
+		{% for review in reviews %}
+			<li>
+				<span class="rating">{% for _ in range(review.rating) %}★{% endfor %}</span>
+				{{ review.comment }}
+			</li>
+		{% empty %}
+			<li>No reviews found.</li>
+		{% endfor %}
+	</ul>
+</body>
+</html>

@@ -17,5 +17,6 @@ urlpatterns = [
     path('password-reset/', views.password_reset, name='password_reset'),
     path('customer/', views.customer_detail, name='customer_detail'),
     path('cart/', include('cart.urls')),
-    path('checkout/', include('checkout.urls'))
+    path('checkout/', include('checkout.urls')),
+    path('reviews/', include('reviews.urls'))
 ]
