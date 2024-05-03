@@ -1,34 +1,38 @@
-from django.shortcuts import render, redirect
-from .forms import ReviewForm
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from .models import Review
+from .serializers import ReviewSerializer
+from products.models import Product
 
 
-def add_review(request, product_id):
+class AddReviewView(APIView):
     """
     add reviews to the product
     """
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            rating = form.cleaned_data['rating']
-            comment = form.cleaned_data['comment']
-            
-            review = Review.objects.create(product_id=product_id,
-                    rating=rating,
-                    comment=comment
-            )
-            review.user = request.user
-            review.save()
-            return redirect('view_reviews', product_id=product_id)
+    permission_classes = [IsAuthenticated]
 
-    else:
-        form = ReviewForm()
-    return render(request, 'reviews/add_reviews.html', {'form': form})
+    def post(self, request, product_id):
+        user = request.user
+        product = Product.objects.get(pk=product_id)
+        data = request.data.copy()
+        data['product'] = product.id
+        data['user'] = user.id
+
+        serializer = ReviewSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def view_reviews(request, product_id):
+class ViewReviewsView(APIView):
     """
     view reviews
     """
-    reviews = Review.objects.filter(product_id=product_id)
-    return render(request, 'reviews/view_reviews.html', {'reviews': reviews})
+    def get(self, request, product_id):
+        product = Product.objects.get(pk=product_id)
+        reviews = Review.objects.filter(product=product)
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

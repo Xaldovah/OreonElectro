@@ -1,12 +1,13 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from .models import Cart, CartItem
-from .forms import AddToCartForm
+from .serializers import CartSerializer, CartItemSerializer
+from products.models import Product
 
 
-@login_required
-def cart_detail(request):
+class CartDetailView(APIView):
     """
     Render the cart detail page.
 
@@ -16,12 +17,16 @@ def cart_detail(request):
     Returns:
         HttpResponse: Rendered HTML response.
     """
-    cart = Cart.objects.get_or_create(user=request.user)
-    return render(request, 'cart/detail.html', {'cart': cart})
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        cart, created = Cart.objects.get_or_create(user=user)
+        serializer = CartSerializer(cart)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@login_required
-def add_to_cart(request, product_id):
+class AddToCartView(APIView):
     """
     Add a product to the user's cart.
 
@@ -32,21 +37,26 @@ def add_to_cart(request, product_id):
     Returns:
         HttpResponse: Rendered HTML response or redirection.
     """
-    cart = Cart.objects.get_or_create(user=request.user)
-    if request.method == 'POST':
-        form = AddToCartForm(request.POST)
-        if form.is_valid():
-            quantity = form.cleaned_data['quantity']
-            cart_item = CartItem.objects.create(cart=cart, product_id=product_id, quantity=quantity)
-            messages.success(request, f'Product added to cart.')
-            return redirect('cart_detail')
-    else:
-        form = AddToCartForm()
-    return render(request, 'cart/add_to_cart.html', {'form': form})
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, product_id):
+        user = request.user
+        cart, created_at = Cart.objects.get_or_create(user=user)
+        product = Product.objects.get(pk=product_id)
+        quantity = request.data.get('quantity', 1)
+
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+        if not created:
+            cart_item.quantity += quantity
+        else:
+            cart_item.quantity = quantity
+        cart_item.save()
+
+        serializer = CartItemSerializer(cart_item)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@login_required
-def update_cart(request, cart_item_id):
+class UpdateCartView(APIView):
     """
     Update the quantity of a product in the cart.
 
@@ -57,17 +67,23 @@ def update_cart(request, cart_item_id):
     Returns:
         HttpResponseRedirect: Redirection to the cart detail page.
     """
-    if request.method == 'POST':
-        cart_item = CartItem.objects.get(pk=cart_item_id)
-        quantity = request.POST.get('quantity')
-        cart_item.quantity = quantity
-        cart_item.save()
-        messages.success(redirect, f'Cart updated.')
-    return redirect('cart_detail')
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, cart_item_id):
+        user = request.user
+        cart_item = CartItem.objects.get(pk=cart_item_id, cart__user=user)
+        quantity = request.data.get('quantity')
+
+        if quantity:
+            cart_item.quantity = quantity
+            cart_item.save()
+            serializer = CartItemSerializer(cart_item)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Quantity is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@login_required
-def remove_from_cart(request, cart_item_id):
+class RemoveFromCartView(APIView):
     """
     Remove a product from the cart.
 
@@ -78,7 +94,10 @@ def remove_from_cart(request, cart_item_id):
     Returns:
         HttpResponseRedirect: Redirection to the cart detail page.
     """
-    cart_item = CartItem.objects.get(pk=cart_item_id)
-    cart_item.delete()
-    messages.success(request, f'Product removed from cart.')
-    return redirect('cart_detail')
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, cart_item_id):
+        user = request.user
+        cart_item = CartItem.objects.get(pk=cart_item_id, cart__user=user)
+        cart_item.delete()
+        return Response({'success': 'Cart item removed.'}, status=status.HTTP_204_NO_CONTENT)

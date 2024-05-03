@@ -1,15 +1,13 @@
-from django.shortcuts import render
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status
 from rest_framework.response import Response
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
+from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from .models import Customer
 from .serializers import CustomerSerializer
 
 
-@api_view(['POST'])
-def register(request):
+class RegisterView(APIView):
     """
     API endpoint to register a new user.
 
@@ -20,16 +18,15 @@ def register(request):
         Response: JSON response indicating the success or failure of
         user registration
     """
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return Response({'message': 'User created successfully!'}, status=201)
-        return Response(form.errors, status=400)
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'User created successfully!'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
-def login(request):
+class LoginView(APIView):
     """
     API endpoint to authenticate and login a user
 
@@ -39,20 +36,17 @@ def login(request):
     Returns:
         Response: JSON response indicating the success or failure of user login.
     """
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.data)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                auth_login(request, user)
-                return Response({'message': 'Login successful!'}, status=200)
-        return Response({'error': 'Invalid credentials'}, status=400)
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            auth_login(request, user)
+            return Response({'message': 'Login successful!'}, status=status.HTTP_200_OK)
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-@api_view(['POST'])
-def logout(request):
+class LogoutView(APIView):
     """
     API endpoint to log out a user
 
@@ -62,14 +56,15 @@ def logout(request):
     Returns:
         Response: JSON response indicating the success or failure of user logout.
     """
-    if request.user.is_authenticated:
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
         auth_logout(request)
         return Response({'message': 'Logout successful!'}, status=200)
-    return Response({'error': 'User is not logged in'}, status=400)
 
 
-@api_view(['POST'])
-def password_reset(request):
+class PasswordResetView(APIView):
     """
     API endpoint to initiate a password reset for a user.
 
@@ -80,17 +75,15 @@ def password_reset(request):
         Response: JSON response indicating the success or failure of password
         reset request.
     """
-    if request.method == 'POST':
-        form = PasswordResetForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return Response({'message': 'Password reset email sent'}, status=200)
-        return Response(form.errors, status=400)
+    def post(self, request):
+        serializer = PasswordResetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Password reset email sent'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT'])
-@permission_classes([IsAuthenticated])
-def customer_detail(request):
+class CustomerDetailView(APIView):
     """
     API endpoint to retrieve or update user profile details.
 
@@ -100,18 +93,18 @@ def customer_detail(request):
     Returns:
         Response: JSON response containing user profile details.
     """
-    user = request.user
-    try:
-        profile = Customer.objects.get(user=user)
-    except Profile.DoesNotExist:
-        return Response({'error': 'Profile not found!'}, status=404)
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    if request.method == 'GET':
-        serializer = CustomerSerializer(profile)
+    def get(self, request):
+        customer = request.user.customer
+        serializer = CustomerSerializer(customer)
         return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = CustomerSerializer(profile, data=request.data)
+
+    def put(self, request):
+        customer = request.user.customer
+        serializer = CustomerSerializer(customer, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=404)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

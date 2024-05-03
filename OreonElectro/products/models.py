@@ -1,4 +1,6 @@
+from djmoney.models.fields import MoneyField
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -10,13 +12,13 @@ class Category(models.Model):
         description (str): The description of the category.
     """
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.CharField(max_length=255)
 
     class Meta:
         verbose_name_plural = "Categories"
 
-        def __str__(self):
-            return self.name
+    def __str__(self):
+        return self.name
 
 
 class Product(models.Model):
@@ -33,12 +35,10 @@ class Product(models.Model):
         updated_at (DateTime): The date and time when the product was last updated.
     """
     name = models.CharField(max_length=255)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.CharField(max_length=255)
+    price = MoneyField(max_digits=7, decimal_places=0, default_currency='KES')
     stock_quantity = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name

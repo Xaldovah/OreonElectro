@@ -1,20 +1,25 @@
-from django.shortcuts import render, get_object_or_404
+from rest_framework import status, generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from .models import Product
 from .forms import SearchForm
+from .serializers import ProductSerializer
 
 
-def product_list(request):
+class ProductList(generics.ListCreateAPIView):
     """
     Retrieve a list of all products.
 
     Returns:
         Render: Rendered template with a list of products.
     """
-    products = Product.objects.all()
-    return render(request, "products/product_detail.html", {"products": products})
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
 
 
-def product_detail(request, pk):
+class ProductDetail(generics.RetrieveAPIView):
     """
     Retrieve details of a specific product by its primary key.
 
@@ -24,21 +29,27 @@ def product_detail(request, pk):
     Returns:
         Render: Rendered template with details of the product.
     """
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, "products/product_detail.html", {"product": product})
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
 
+class SearchView(APIView):
+    """
+    search view class
+    """
+    permission_classes = [IsAuthenticated]
 
-def search(request):
-    """
-    Search a product
-    """
-    if request.method == 'GET':
-        form = SearchForm(request.GET)
+    def get(self, request, format=None):
+        query = request.GET.get('query')
+        results = Product.objects.filter(name__icontains=query)
+        serializer = ProductSerializer(results, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        form = SearchForm(request.data)
         if form.is_valid():
             query = form.cleaned_data['query']
             results = Product.objects.filter(name__icontains=query)
-            return render(request, 'products/search_results.html', {'results': results})
-    
-    else:
-        form = SearchForm()
-    return render(request, 'products/search_form.html', {'form': form})
+            serializer = ProductSerializer(results, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'error': 'Invalid form data'}, status=status.HTTP_400_BAD_REQUEST)
