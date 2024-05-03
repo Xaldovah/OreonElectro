@@ -22,6 +22,9 @@ class CartDetailView(APIView):
     def get(self, request):
         user = request.user
         cart, created = Cart.objects.get_or_create(user=user)
+        cart.total = sum(item.subtotal for item in cart.items.all())
+        cart.save()
+
         serializer = CartSerializer(cart)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -45,12 +48,18 @@ class AddToCartView(APIView):
         product = Product.objects.get(pk=product_id)
         quantity = request.data.get('quantity', 1)
 
+        subtotal = product.price * quantity
+
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
         if not created:
             cart_item.quantity += quantity
         else:
             cart_item.quantity = quantity
+        cart_item.subtotal = subtotal
         cart_item.save()
+
+        cart.total += subtotal
+        cart.save()
 
         serializer = CartItemSerializer(cart_item)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -75,8 +84,16 @@ class UpdateCartView(APIView):
         quantity = request.data.get('quantity')
 
         if quantity:
+            subtotal = cart_item.product.price * quantity
+            cart_item.subtotal = subtotal
+
             cart_item.quantity = quantity
             cart_item.save()
+
+            cart = cart_item.cart
+            cart.total += subtotal - cart_item.subtotal
+            cart.save()
+
             serializer = CartItemSerializer(cart_item)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
