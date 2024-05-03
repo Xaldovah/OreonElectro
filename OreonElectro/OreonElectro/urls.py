@@ -12,5 +12,8 @@ urlpatterns = [
     path('home/', views.home, name="home"),
     path('cart/', include('cart.urls')),
     path('checkout/', include('checkout.urls')),
-    path('reviews/', include('reviews.urls'))
+    path('reviews/', include('reviews.urls')),
+    path('notifications/', include('notifications.urls')),
+    path('localization/', include('localization.urls')),
+    path('analytics/', include('analytics.urls'))
 ]
