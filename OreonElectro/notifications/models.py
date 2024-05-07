@@ -19,6 +19,13 @@ class Notification(models.Model):
     message = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    NOTIFICATION_TYPES = (
+            ('order_update', 'Order Update'),
+            ('Promotion', 'Promotion'),
+            ('event', 'Event'),
+    )
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
 
     def __str__(self):
         return f"{self.title} for {self.user.username}"

@@ -1,14 +1,30 @@
 from rest_framework import serializers
-from orders.models import Order
+from .models import Checkout
+from orders.models import Order, OrderItem
 
 
 class CheckoutSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Order
-        fields = ['customer', 'shipping_address', 'billing_address', 'payment_method', 'status']
+        models = Checkout
+        fields = '__all__'
+
+    def create(self, validated_data):
+        order_items_data = validated_data.pop('order_items')
+        order = Order.objects.create(**validated_data)
+        for item_data in order_items_data:
+            OrderItem.objects.create(order=order, **item_data)
+        return order
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+
     class Meta:
         model = Order
-        fields = ['id', 'customer', 'shipping_address', 'billing_address', 'payment_method', 'status', 'created_at', 'updated_at']
+        fields = '__all__'

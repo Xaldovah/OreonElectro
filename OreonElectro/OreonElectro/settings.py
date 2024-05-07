@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+from django.utils.translation import gettext_lazy as _
 import os
 
 load_dotenv()
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
     'localization',
     'analytics',
     'rest_framework',
+    'rest_framework.authtoken',
     'djmoney',
     'corsheaders',
     'crispy_forms',
@@ -76,6 +78,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework.authentication.TokenAuthentication',
+        ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -148,7 +156,21 @@ TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
+
+LANGUAGES = [
+        ('en', _('English')),
+        ('fr', _('French')),
+        ('es', _('Spanish')),
+        ('pt', _('Portuguese')),
+        ('de', _('German')),
+]
+
+LOCALE_PATHS = (
+        os.path.join(BASE_DIR, 'locale'),
+)
 
 
 # Static files (CSS, JavaScript, Images)

@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from django.contrib.auth import authenticate
 from .models import Customer
 from .serializers import CustomerSerializer
 
@@ -19,14 +22,14 @@ class RegisterView(APIView):
         user registration
     """
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = CustomerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'message': 'User created successfully!'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LoginView(APIView):
+class LoginView(ObtainAuthToken):
     """
     API endpoint to authenticate and login a user
 
@@ -36,13 +39,18 @@ class LoginView(APIView):
     Returns:
         Response: JSON response indicating the success or failure of user login.
     """
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-        user = authenticate(username=username, password=password)
-        if user:
-            auth_login(request, user)
-            return Response({'message': 'Login successful!'}, status=status.HTTP_200_OK)
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                context={'request': request})
+
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({
+                'token': token.key,
+                'user_id': user.pk,
+                'message': 'Login successful!'
+            }, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
@@ -60,8 +68,8 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        auth_logout(request)
-        return Response({'message': 'Logout successful!'}, status=200)
+        request.user.auth_token.delete()
+        return Response({'message': 'Logout successful!'}, status=status.HTTP_200_OK)
 
 
 class PasswordResetView(APIView):
@@ -106,5 +114,5 @@ class CustomerDetailView(APIView):
         serializer = CustomerSerializer(customer, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

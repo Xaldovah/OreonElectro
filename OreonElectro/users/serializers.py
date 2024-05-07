@@ -30,7 +30,7 @@ class PasswordResetSerializer(serializers.ModelSerializer):
         """
         email = self.validated_data['email']
         form = PasswordResetForm({'email': email})
-        if form.is_valid:
+        if form.is_valid():
             form.save(
                     use_https=True,
                     from_email=None,
