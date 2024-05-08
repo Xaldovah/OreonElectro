@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'payments',
     'localization',
     'analytics',
+    'promotions',
     'rest_framework',
     'rest_framework.authtoken',
     'djmoney',
@@ -166,11 +167,24 @@ LANGUAGES = [
         ('es', _('Spanish')),
         ('pt', _('Portuguese')),
         ('de', _('German')),
+        ('ar', _('Arabic')),
+        ('sw', _('Swahili')),
+        ('zh-hans', _('Simplified Chinese')),
 ]
+
+LANGUAGES_BIDI = ['ar']
 
 LOCALE_PATHS = (
         os.path.join(BASE_DIR, 'locale'),
 )
+
+LANGUAGE_COOKIE_NAME = "django_language"
+LANGUAGE_COOKIE_AGE = None
+LANGUAGE_COOKIE_DOMAIN = None
+LANGUAGE_COOKIE_PATH = "/"
+LANGUAGE_COOKIE_SECURE = False
+LANGUAGE_COOKIE_HTTPONLY = False
+LANGUAGE_COOKIE_SAMESITE = None
 
 
 # Static files (CSS, JavaScript, Images)

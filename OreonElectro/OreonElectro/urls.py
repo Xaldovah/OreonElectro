@@ -18,5 +18,6 @@ urlpatterns = [
     path('api/reviews/', include('reviews.urls')),
     path('api/notifications/', include('notifications.urls')),
     path('api/localization/', include('localization.urls')),
-    path('api/analytics/', include('analytics.urls'))
+    path('api/analytics/', include('analytics.urls')),
+    path('api/promotions/', include('promotions.urls'))
 ]
