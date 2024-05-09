@@ -65,6 +65,13 @@ INSTALLED_APPS = [
     'localization',
     'analytics',
     'promotions',
+    'seo',
+    'content',
+    'shipping',
+    'inventory',
+    'reporting',
+    'customer_service',
+    'marketing',
     'rest_framework',
     'rest_framework.authtoken',
     'djmoney',
@@ -72,6 +79,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap4',
     'crispy_bootstrap4',
+    'drf_yasg',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,9 +88,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+
 REST_FRAMEWORK = {
         'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework.authentication.SessionAuthentication',
             'rest_framework.authentication.TokenAuthentication',
+        ],
+        'DEFAULT_PERMISSION_CLASSES': [
+            'rest_framework.permissions.IsAuthenticated',
         ],
 }
 
