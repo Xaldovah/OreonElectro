@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from products.models import Product
 from django.db.models import EmailField
+from djmoney.money import Money
+
 
 User = get_user_model()
 
@@ -31,10 +33,23 @@ class Order(models.Model):
     Strings:
         __str__: Returns a string representation of the order.
     """
-    PENDING = 'pending'
-    SHIPPED = 'shipped'
-    DELIVERED = 'delivered'
-    CANCELLED = 'cancelled'
+    PAYPAL = 'paypal'
+    MPESA = 'mpesa'
+    STRIPE = 'stripe'
+    BANK = 'bank_card'
+
+    PAYMENT_CHOICES = [
+            (PAYPAL, 'paypal'),
+            (MPESA, 'mpesa'),
+            (STRIPE, 'stripe'),
+            (BANK, 'bank_card'),
+    ]
+
+    PENDING = 'Pending'
+    SHIPPED = 'Shipped'
+    DELIVERED = 'Delivered'
+    CANCELLED = 'Cancelled'
+
     ORDER_STATUS_CHOICES = [
             (PENDING, 'Pending'),
             (SHIPPED, 'Shipped'),
@@ -45,7 +60,7 @@ class Order(models.Model):
     billing_address = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=20)
     email = models.EmailField()
-    payment_method = models.CharField(max_length=50)
+    payment_method = models.CharField(max_length=50, choices=PAYMENT_CHOICES, default=MPESA)
     payment_status = models.CharField(max_length=20, choices=[
         ('pending', 'Pending'),
         ('completed', 'Completed'),
@@ -56,7 +71,6 @@ class Order(models.Model):
     tracking_number = models.CharField(max_length=100, blank=True)
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_orders')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default=PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -81,7 +95,6 @@ class OrderItem(models.Model):
         quantity (int): The quantity of the product in the order.
         subtotal (Decimal): The subtotal for the item.
     """
-
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()

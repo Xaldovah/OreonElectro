@@ -53,6 +53,7 @@ SIMPLE_JWT = {
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'OreonElectro',
     'orders',
     'products',
@@ -72,6 +73,7 @@ INSTALLED_APPS = [
     'reporting',
     'customer_service',
     'marketing',
+    'userauths',
     'rest_framework',
     'rest_framework.authtoken',
     'djmoney',
@@ -217,4 +219,57 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap4"]
 
 LOGIN_REDIRECT_URL = "/home"
-LOGOUT_REDIRECT_URL = "api/login/"
+LOGOUT_REDIRECT_URL = "api/customer/login/"
+
+JAZZMIN_SETTINGS = {
+        'site_title': 'OreonElectro Admin',
+        'site_header': 'OreonElectro',
+        'site_brand': 'Your Electronics Plug',
+        'site_logo': '',
+        'welcome_sign': 'Welcome to OreonElectro',
+        'copyright': 'OreonElectro Ltd',
+        'search_model': ['auth.User', 'auth.Group'],
+        'topmenu_links': [
+            {'name': 'Home', 'url': 'admin:index', 'permissions': ['auth.view_user']},
+            {'model': 'auth.User'},
+            {'app': 'products'},
+        ],
+        'icons': {
+            'auth': 'fas fa-users-cog',
+            'auth.user': 'fas fa-user',
+            'auth.Group': 'fas fa-users'
+        },
+        #'language_chooser': True,
+        'show_ui_builder': True,
+}
+
+JAZZMIN_UI_TWEAKS = {
+        "navbar_small_text": False,
+        "footer_small_text": False,
+        "body_small_text": False,
+        "brand_small_text": False,
+        "brand_colour": "navbar-success",
+        "accent": "accent-teal",
+        "navbar": "navbar-dark",
+        "no_navbar_border": False,
+        "navbar_fixed": False,
+        "layout_boxed": False,
+        "footer_fixed": False,
+        "sidebar_fixed": False,
+        "sidebar": "sidebar-dark-info",
+        "sidebar_nav_small_text": False,
+        "sidebar_disable_expand": False,
+        "sidebar_nav_child_indent": False,
+        "sidebar_nav_compact_style": False,
+        "sidebar_nav_legacy_style": False,
+        "sidebar_nav_flat_style": False,
+        "theme": "darkly",
+        "button_classes": {
+            "primary": "btn-primary",
+            "secondary": "btn-secondary",
+            "info": "btn-info",
+            "warning": "btn-warning",
+            "danger": "btn-danger",
+            "success": "btn-success",
+        },
+}

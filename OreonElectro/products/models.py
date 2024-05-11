@@ -36,7 +36,8 @@ class Product(models.Model):
     """
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    price = MoneyField(max_digits=7, decimal_places=0, default_currency='KES')
+    # price = MoneyField(max_digits=7, decimal_places=2, default_currency='KES')
+    price = models.DecimalField(max_digits=7, decimal_places=2)
     stock_quantity = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
