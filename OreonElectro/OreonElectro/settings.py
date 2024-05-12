@@ -73,7 +73,6 @@ INSTALLED_APPS = [
     'reporting',
     'customer_service',
     'marketing',
-    'userauths',
     'rest_framework',
     'rest_framework.authtoken',
     'djmoney',
