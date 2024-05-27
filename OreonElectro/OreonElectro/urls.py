@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include("django.contrib.auth.urls")),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
-    path('api/', include('seo.urls')),
+    path('api/seo/', include('seo.urls')),
     path('api/content/', include('content.urls')),
     path('api/products/', include('products.urls')),
     path('api/customer/', include('users.urls')),

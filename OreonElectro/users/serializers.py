@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from .models import Customer
 from django.contrib.auth.forms import PasswordResetForm
 from rest_framework import serializers
 
@@ -7,8 +7,20 @@ class CustomerSerializer(serializers.ModelSerializer):
     """
     """
     class Meta:
-        model = User
-        fields = ['user', 'shipping_address', 'billing_address', 'phone_number']
+        model = Customer
+        fields = ['username', 'email', 'password', 'shipping_address', 'billing_address', 'phone_number']
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = Customer.objects.create_user(
+                username=validated_data['username'],
+                email=validated_data['email'],
+                password=validated_data['password'],
+                shipping_address=validated_data['shipping_address'],
+                billing_address=validated_data.get('billing_address', ''),
+                phone_number=validated_data['phone_number'],
+        )
+        return user
 
 
 class PasswordResetSerializer(serializers.ModelSerializer):

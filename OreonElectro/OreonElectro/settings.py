@@ -44,6 +44,8 @@ REST_FRAMEWORK = {
         ],
 }
 
+AUTH_USER_MODEL = 'users.Customer'
+
 SIMPLE_JWT = {
         "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -111,9 +113,11 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-        'http://localhost:5173',
-]
+CORS_ALLOW_ALL_ORIGINS = True
+
+# CORS_ALLOWED_ORIGINS = [
+#        "http://localhost:5173",
+#]
 
 ROOT_URLCONF = 'OreonElectro.urls'
 

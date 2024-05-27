@@ -12,6 +12,8 @@ const Login: React.FC = () => {
     password: '',
   });
 
+  const [error, setError] = setState<string | null>(null);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -19,15 +21,23 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/login/', formData);
-      console.log(response.data);
+      const response = await axios.post('/api/customer/login/', formData);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.data.user_id);
     } catch (error) {
-      console.log(error);
+      setError(error.message);
     }
   };
 
   return (
-    // Will add login form here
+    <div>
+    {error && <p>{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="username" onChange={handleChange} placeholder="Username" required />
+        <input type="password" name="password" onChange={handleChange} placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+    </div>
   );
 };
 
