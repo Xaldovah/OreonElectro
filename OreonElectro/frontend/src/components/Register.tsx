@@ -15,9 +15,6 @@ const Register: React.FC = () => {
     username: '',
     email: '',
     password: '',
-    shipping_address: '',
-    billing_address: '',
-    phone_number: '',
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -38,15 +35,13 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8 space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-700 text-center">Register</h2>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              Username
-            </label>
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+      <div className="card shadow-sm p-4" style={{ maxWidth: '400px', width: '100%' }}>
+        <h2 className="card-title text-center">Register</h2>
+        {error && <p className="text-danger text-center">{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="username" className="form-label">Username</label>
             <input
               type="text"
               name="username"
@@ -54,13 +49,11 @@ const Register: React.FC = () => {
               onChange={handleChange}
               placeholder="Username"
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="form-control"
             />
           </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email</label>
             <input
               type="email"
               name="email"
@@ -68,13 +61,11 @@ const Register: React.FC = () => {
               onChange={handleChange}
               placeholder="Email"
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="form-control"
             />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">Password</label>
             <input
               type="password"
               name="password"
@@ -82,52 +73,13 @@ const Register: React.FC = () => {
               onChange={handleChange}
               placeholder="Password"
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="form-control"
             />
           </div>
-          <div>
-            <label htmlFor="shipping_address" className="block text-sm font-medium text-gray-700">
-              Shipping Address
-            </label>
-            <textarea
-              name="shipping_address"
-              id="shipping_address"
-              onChange={handleChange}
-              placeholder="Shipping Address"
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            ></textarea>
-          </div>
-          <div>
-            <label htmlFor="billing_address" className="block text-sm font-medium text-gray-700">
-              Billing Address
-            </label>
-            <textarea
-              name="billing_address"
-              id="billing_address"
-              onChange={handleChange}
-              placeholder="Billing Address"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            ></textarea>
-          </div>
-          <div>
-            <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              name="phone_number"
-              id="phone_number"
-              onChange={handleChange}
-              placeholder="Phone Number"
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div>
+          <div className="d-grid">
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="btn btn-primary"
             >
               Register
             </button>

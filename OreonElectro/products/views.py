@@ -2,7 +2,6 @@ from rest_framework import status
 from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 from .models import Product
 from .forms import SearchForm
 from .serializers import ProductSerializer
@@ -25,7 +24,7 @@ class ProductListView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProductDetailView(APIView):
@@ -81,8 +80,6 @@ class SearchView(APIView):
     """
     search view class
     """
-    permission_classes = [IsAuthenticated]
-
     def get(self, request, format=None):
         query = request.GET.get('query')
         results = Product.objects.filter(name__icontains=query)
