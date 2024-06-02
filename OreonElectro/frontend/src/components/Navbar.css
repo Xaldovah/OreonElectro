@@ -1,0 +1,28 @@
+.navbar {
+	background-color: yellow;
+       	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+   	font-weight: bold;
+  	color: #6f42c1 !important;
+}
+
+.navbar-nav .nav-link {
+	color: #555 !important;
+}
+
+.navbar-nav .nav-link:hover {
+	color: #6f42c1 !important;
+}
+
+.form-control {
+	width: 300px;
+}
+
+.navbar .fa-user,
+.navbar .fa-heart,
+.navbar .fa-shopping-cart {
+	font-size: 1.0rem;
+	margin-left: 1rem;
+}
