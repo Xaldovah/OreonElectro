@@ -15,13 +15,13 @@ from datetime import timedelta
 from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
 import os
+from corsheaders.defaults import default_headers
+
 
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -91,18 +91,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-
-REST_FRAMEWORK = {
-        'DEFAULT_AUTHENTICATION_CLASSES': [
-            'rest_framework.authentication.SessionAuthentication',
-            'rest_framework.authentication.TokenAuthentication',
-        ],
-        'DEFAULT_PERMISSION_CLASSES': [
-            'rest_framework.permissions.IsAuthenticated',
-        ],
-}
-
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -110,14 +100,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = ['*']
+CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOWED_ORIGINS = [
-        "http://localhost:5173",
-]
-CORS_ALLOWS_CREDENTIALS = True
+REST_FRAMEWORK = {
+        'DEFAULT_PERMISSION_CLASSES': [
+            'rest_framework.permissions.AllowAny',
+        ],
+}
 
 
 ROOT_URLCONF = 'OreonElectro.urls'
@@ -214,6 +207,8 @@ LANGUAGE_COOKIE_SAMESITE = None
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

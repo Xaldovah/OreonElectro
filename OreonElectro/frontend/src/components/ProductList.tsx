@@ -17,6 +17,7 @@ const ProductList: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const response = await axiosInstance.get<Product[]>('/api/products/');
+        console.log('Response data:', response.data);
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -32,11 +33,11 @@ const ProductList: React.FC = () => {
         {products.map(product => (
           <Col md={4} key={product.id} className="mb-4">
             <Card>
-              <Card.Img variant="top" src={product.image} alt={product.name} />
+              <Card.Img variant="top" src={`http://localhost:8000${product.image}`} alt={product.name} />
               <Card.Body>
                 <Card.Title>{product.name}</Card.Title>
                 <Card.Text>{product.description}</Card.Text>
-                <Card.Text>${product.price.toFixed(2)}</Card.Text>
+                <Card.Text>${Number(product.price).toFixed(2)}</Card.Text>
                 <Button variant="primary">Add to Cart</Button>
               </Card.Body>
             </Card>
