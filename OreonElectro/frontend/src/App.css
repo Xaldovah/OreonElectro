@@ -1,1 +1,17 @@
 @import "@fortawesome/fontawesome-free/css/all.min.css";
+
+.card img{
+	object-fit: cover;
+	height: 200px;
+}
+
+@media (max-width: 768px) {
+	.card img {
+		height: 150px;
+	}
+}
+
+.hero .border {
+	background-color: white;
+	margin-bottom: 20px;
+}

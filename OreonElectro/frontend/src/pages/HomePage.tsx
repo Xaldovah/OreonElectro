@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
+import CustomerSupport from '../components/CustomerSupport';
 import ProductList from '../components/ProductList';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
@@ -10,6 +11,7 @@ const HomePage: React.FC = () => {
     <>
       <Navbar />
       <Hero />
+      <CustomerSupport />
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-3">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import axiosInstance from '../axiosConfig';
+import ProductCard from './ProductCard';
 
 interface Product {
   id: number;
@@ -32,15 +33,7 @@ const ProductList: React.FC = () => {
       <Row>
         {products.map(product => (
           <Col md={4} key={product.id} className="mb-4">
-            <Card>
-              <Card.Img variant="top" src={`http://localhost:8000${product.image}`} alt={product.name} />
-              <Card.Body>
-                <Card.Title>{product.name}</Card.Title>
-                <Card.Text>{product.description}</Card.Text>
-                <Card.Text>${Number(product.price).toFixed(2)}</Card.Text>
-                <Button variant="primary">Add to Cart</Button>
-              </Card.Body>
-            </Card>
+            <ProductCard product={product} />
           </Col>
         ))}
       </Row>
