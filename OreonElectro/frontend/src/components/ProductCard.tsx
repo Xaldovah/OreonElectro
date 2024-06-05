@@ -17,7 +17,7 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Card className="h-100">
-      <a href={`/api/product/${product.id}`} className="stretched-link">
+      <a href={`/products/${product.id}`} className="stretched-link">
         <Card.Img variant="top" src={`http://localhost:8000${product.image}`} alt={product.name} />
       </a>
       <Card.Body className="d-flex flex-column">
