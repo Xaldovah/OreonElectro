@@ -1,5 +1,8 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Card, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import '../styles/custom.css';
 
 interface Product {
   id: number;
@@ -17,9 +20,9 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Card className="h-100">
-      <a href={`/products/${product.id}`} className="stretched-link">
+      <Link to={`/products/${product.id}`} className="stretched-link">
         <Card.Img variant="top" src={`http://localhost:8000${product.image}`} alt={product.name} />
-      </a>
+      </Link>
       <Card.Body className="d-flex flex-column">
         <Card.Title>{product.name}</Card.Title>
         <Card.Text>
@@ -32,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <span>${Number(product.price).toFixed(2)}</span>
           )}
         </Card.Text>
-        <button className="btn btn-primary mt-auto">Add to Cart</button>
+        <Button variant="primary" className="mt-auto">Add to Cart</Button>
       </Card.Body>
     </Card>
   );

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import axiosInstance from '../axiosConfig';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import { getProducts } from '../api';
 import ProductCard from './ProductCard';
+import '../styles/custom.css';
 
 interface Product {
   id: number;
@@ -13,20 +15,27 @@ interface Product {
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axiosInstance.get<Product[]>('/api/products/');
-        console.log('Response data:', response.data);
+        const response = await getProducts();
         setProducts(response.data);
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        setError('Error fetching products');
+        setLoading(false);
       }
     };
 
     fetchProducts();
   }, []);
+
+  if (loading) return <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>;
+
+  if (error) return <Alert variant="danger">{error}</Alert>;
 
   return (
     <Container>

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axiosInstance from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Spinner, Alert, Container, Row, Col, Button } from 'react-bootstrap';
+import { getProduct } from '../api';
 
 interface Product {
   id: number;
@@ -15,30 +17,37 @@ interface Product {
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchProduct() {
+    const fetchProduct = async () => {
       try {
-        const response = await axiosInstance.get(`http://localhost:8000/api/products/${id}`);
+        const response = await getProduct(Number(id));
         setProduct(response.data);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching the product:", error);
+        setError('Error fetching the product');
+        setLoading(false);
       }
-    }
-    fetchProduct();
+    };
+
+    if (id) fetchProduct();
   }, [id]);
 
-  if (!product) {
-    return <div>Loading...</div>
-  }
+  if (loading) return <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>;
+
+  if (error) return <Alert variant="danger">{error}</Alert>;
+
+  if (!product) return null;
 
   return (
-    <div className="container mt-5">
-      <div className="row">
-        <div className="col-md-6">
+    <Container className="mt-5">
+      <Row>
+        <Col md={6}>
           <img src={`http://localhost:8000${product.image}`} alt={product.name} className="img-fluid" />
-        </div>
-        <div className="col-md-6">
+        </Col>
+        <Col md={6}>
           <h1>{product.name}</h1>
           {product.discountPrice ? (
             <div>
@@ -49,10 +58,10 @@ const ProductDetail: React.FC = () => {
             <span>${Number(product.price).toFixed(2)}</span>
           )}
           <p>{product.description}</p>
-          <button className="btn btn-primary mt-auto">Add to Cart</button>
-        </div>
-      </div>
-    </div>
+          <Button className="mt-auto" variant="primary">Add to Cart</Button>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

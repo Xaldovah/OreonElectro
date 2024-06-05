@@ -5,6 +5,7 @@ import CustomerSupport from '../components/CustomerSupport';
 import ProductList from '../components/ProductList';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
+import '../styles/custom.css';
 
 const HomePage: React.FC = () => {
   return (
