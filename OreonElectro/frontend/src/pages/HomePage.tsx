@@ -11,14 +11,20 @@ const HomePage: React.FC = () => {
   return (
     <>
       <Navbar />
-      <Hero />
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-sm-3 p-3">
+            <Sidebar />
+          </div>
+          <div className="col-sm-9 p-3">
+            <Hero />
+          </div>
+        </div>
+      </div>
       <CustomerSupport />
       <div className="container-fluid">
         <div className="row">
-          <div className="col-md-3">
-            <Sidebar />
-          </div>
-          <div className="col-md-9">
+          <div className="col-md-12">
             <ProductList />
           </div>
         </div>
