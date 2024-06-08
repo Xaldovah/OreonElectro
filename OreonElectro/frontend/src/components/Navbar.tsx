@@ -42,7 +42,7 @@ const Navbar = () => {
                 <i className="fas fa-heart fa-lg text-primary"></i>
               </Link>
             </li>
-            <li className="nav-item dropdown">
+            <li className="nav-item">
               <a className="nav-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i className="fas fa-user fa-lg text-primary"></i>
               </a>

@@ -12,17 +12,15 @@ const HomePage: React.FC = () => {
     <>
       <Navbar />
       <div className="container-fluid">
-        <div className="row">
-          <div className="col-sm-3 p-3">
+        <div className="row" style={{ minHeight: '70vh' }}>
+          <div className="col-md-3 col-sm-12 p-3">
             <Sidebar />
           </div>
-          <div className="col-sm-9 p-3">
+          <div className="col-md-9 col-sm-12 p-3">
             <Hero />
           </div>
         </div>
-      </div>
-      <CustomerSupport />
-      <div className="container-fluid">
+        <CustomerSupport />
         <div className="row">
           <div className="col-md-12">
             <ProductList />

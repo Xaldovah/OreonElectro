@@ -1,10 +1,11 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container } from 'react-bootstrap';
 import { FaMobileAlt, FaDesktop, FaHeadphones, FaFilm, FaCamera, FaCube, FaTv, FaLightbulb } from 'react-icons/fa';
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="d-flex flex-column p-3 bg-light" style={{ height: '100vh', width: '250px' }}>
+    <Container>
       <ul className="nav nav-pills flex-column mb-auto">
         <li className="nav-item mb-3">
           <a href="#" className="nav-link text-dark">
@@ -55,7 +56,7 @@ const Sidebar: React.FC = () => {
           </a>
         </li>
       </ul>
-    </div>
+    </Container>
   );
 };
 

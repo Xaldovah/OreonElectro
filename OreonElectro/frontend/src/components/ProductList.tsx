@@ -41,7 +41,7 @@ const ProductList: React.FC = () => {
     <Container>
       <Row>
         {products.map(product => (
-          <Col md={4} key={product.id} className="mb-4">
+          <Col xs={12} sm={6} md={4} lg={3} key={product.id}>
             <ProductCard product={product} />
           </Col>
         ))}

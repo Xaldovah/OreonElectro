@@ -16,6 +16,28 @@
 	color: #6f42c1 !important;
 }
 
+.navbar-nav .dropdown-menu {
+	background-color: yellow;
+	color: white;
+}
+
+.navbar-nav .dropdown-menu .dropdown-item {
+	color: purple;
+}
+
+.navbar-nav .dropdown-menu .dropdown-item:hover {
+	background-color: white;
+}
+
+.navbar-nav  .dropdown {
+	margin-left: 40px;
+}
+
+.navbar-nav .dropdown-toggle {
+	background-color: white;
+	color: white;
+}
+
 .form-control {
 	width: 300px;
 }

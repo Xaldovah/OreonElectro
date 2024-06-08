@@ -8,18 +8,18 @@ const CustomerSupport: React.FC = () => {
     <Container className="text-center my-5">
       <Row>
         <Col md={4}>
-          <FaHeadset size={50} className="mb-3" />
-          <h5>24/7 Online Support</h5>
+          <FaHeadset size={20} className="mb-3" />
+          <h6><b>24/7 Online Support</b></h6>
           <p>We are here to help you anytime.</p>
         </Col>
         <Col md={4}>
-          <FaShippingFast size={50} className="mb-3" />
-          <h5>Fast Delivery</h5>
+          <FaShippingFast size={20} className="mb-3" />
+          <h6><b>Fast Delivery</b></h6>
           <p>Get your products delivered quickly.</p>
         </Col>
         <Col md={4}>
-          <FaCreditCard size={50} className="mb-3" />
-          <h5>Fast Checkout</h5>
+          <FaCreditCard size={20} className="mb-3" />
+          <h6><b>Fast Checkout</b></h6>
           <p>Seamless and secure checkout process.</p>
         </Col>
       </Row>

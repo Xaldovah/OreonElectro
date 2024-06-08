@@ -1,0 +1,38 @@
+.hero-container, .sidebar-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: stretch;
+}
+
+.hero {
+       	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: stretch;
+}
+
+.hero img {
+	max-width: 100%;
+    	height: auto;
+}
+
+.hero .display-4 {
+	font-size: 2rem;
+}
+
+.hero .btn {
+	font-size: 1rem;
+}
+
+.hero .border img {
+	max-width: 100%;
+	height: auto;
+	max-height: 150px;
+}
+
+.sidebar {
+       	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: stretch;
+}
